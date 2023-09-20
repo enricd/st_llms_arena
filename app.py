@@ -17,26 +17,39 @@ AVAILABLE_MODELS = [
 DEFAULT_PROMPT1 = [
     """You are an expert gamer agent playing the 1vs1 snake game in a grid board. You can move up, down, left or right. 
 You can eat food to grow. If you hit a wall or another snake, you die. The game ends when one of the snakes dies. You are compiting against another snake.""",
-"""You are the snake1 which is the color green. Your opponent is the snake2 with color blue. This is the game board in emojis where heads are rounds, bodies are squares and food is an apple: 
+
+"""You are the snake1, which is the color green. Your opponent is the snake2 with color blue. This is the game board in emojis where heads are rounds, bodies are squares and food is an apple: 
 {emojis_board}
-and this is the board state in JSON, positions are (x, y), the game board size is 15 by 15, x goes from 0 to 14 left to right and y goes 0 to 14 up to down: {board_state_str}
+
+and this is the board state in JSON, positions are in (x, y) format, the game board size is 15 by 15, x goes from 0 to 14 left to right and y goes 0 to 14 up to down: 
+{board_state_str}
+
 The snake dir parameter is the first letter of the previous chosen direction of the snake, if you chose an opposite direction you will die as you will collide with your own body.
-You have to shortly reason your next move in 1-3 lines and then always add one of the follwoing emojis: ⬆️ ⬇️ ⬅️ ➡️ to chose the direction of your next move.
+You have to shortly reason your next move in 1-3 lines and then always add one of the followoing emojis: ⬆️, ⬇️, ⬅️, ➡️ (for <up>, <down>, <left> and <right>) to chose the direction of your next move.
 Make sure to always add a space after the emoji and only use one emoji in your response which will be your final decision for the turn.""",
 ]
 
 DEFAULT_PROMPT2 = [
     """You are an expert gamer agent playing the 1vs1 snake game in a grid board. You can move up, down, left or right. 
 You can eat food to grow. If you hit a wall or another snake, you die. The game ends when one of the snakes dies. You are compiting against another snake.""",
-"""You are the snake2 which is the color blue. Your opponent is the snake1 with color green. This is the game board in characters where heads are G (green) and B (blue), bodies are g and b and food is R. Empty cells are marked with _. 
+
+"""You are the snake2, which is the color blue. Your opponent is the snake1 with color green. This is the game board in characters where heads are 'G' (green) and 'B' (blue), bodies are 'g' and 'b' and food is 'R'. Empty cells are marked with '_'. 
 Every line starts also with its number which is at the same time the y coordinate for that line: 
 Characters board:
 {chars_board}
 
-and this is the board state in JSON, positions are (x, y), the game board size is 15 by 15, x goes from 0 to 14 left to right and y goes 0 to 14 up to down: {board_state_str}
+and this is the board state in JSON, positions are in (x, y) format, the game board size is 15 by 15, x goes from 0 to 14 left to right and y goes 0 to 14 up to down: 
+{board_state_str}
+
 The snake dir parameter is the first letter of the previous chosen direction of the snake, if you chose an opposite direction you will die as you will collide with your own body.
-You have to shortly reason your next move in 1-3 lines and then always add one of the follwoing emojis: ⬆️ ⬇️ ⬅️ ➡️ to chose the direction of your next move.
-Make sure to always add a space after the emoji and only use one emoji in your response which will be your final decision for the turn.""",
+You have to shortly reason your next move in 1-3 lines and then always add one of the followoing emojis: ⬆️, ⬇️, ⬅️, ➡️ (for <up>, <down>, <left> and <right>) to chose the direction of your next move.
+Make sure to always add a space after the emoji and only use one emoji in your response which will be your final decision for the turn.
+
+Makt the following Chain of Thought in few words:
+1. Locate yourself and your head in the chars map (the capital B) and coordinates (the element 0 of the body list in snake2, the body parts are ordered from head to tail)
+2. Locate the closest food
+3. Chose the direction to move on cell closer to the food, check if you will die/lose there and if so chose another direction
+4. Finally output the emoji for the direction you chose""",
 ]
 
 
