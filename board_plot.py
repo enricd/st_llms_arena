@@ -81,11 +81,13 @@ def board_plot(board_config, board_state, is_display=False, save_dir=None):
             cv2.circle(image, center1pupil, radius//2, (20, 20, 20), -1)
             cv2.circle(image, center2pupil, radius//2, (20, 20, 20), -1)
 
-    for i, pos in enumerate(snake1_body):
-        draw_pos(pos, SNAKE1_COLOR, i==0, snake1_dir)
+    for pos in snake1_body[1:]:
+        draw_pos(pos, SNAKE1_COLOR, False, snake1_dir)
+    draw_pos(snake1_body[0], SNAKE1_COLOR, True, snake1_dir)
 
-    for i, pos in enumerate(snake2_body):
-        draw_pos(pos, SNAKE2_COLOR, i==0, snake2_dir)
+    for pos in snake2_body[1:]:
+        draw_pos(pos, SNAKE2_COLOR, False, snake2_dir)
+    draw_pos(snake2_body[0], SNAKE2_COLOR, True, snake2_dir)
 
     for pos in food:
         draw_pos(pos, FOOD_COLOR)
