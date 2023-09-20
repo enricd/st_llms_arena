@@ -215,17 +215,17 @@ def game_engine(board_config=board_config,
         with plots_container:
             cols_plots = st.columns(3)
             with cols_plots[0]:
-                st.subheader("Completion tokens")
+                st.write("##### Completion tokens")
                 st.line_chart(df[["agent1_completion_tokens", "agent2_completion_tokens"]], color=["#12c914", "#0074ba"])
                 st.info(f"Total completion tokens Agent 1: {df['agent1_completion_tokens'].sum()}")
                 st.info(f"Total completion tokens Agent 2: {df['agent2_completion_tokens'].sum()}")
             with cols_plots[1]:
-                st.subheader("Cost of Input + Completion tokens")
+                st.write("##### Cost of input + completion tokens ($)")
                 st.line_chart(df[["agent1_cost", "agent2_cost"]], color=["#12c914", "#0074ba"])
                 st.info(f"Total cost Agent 1: {df['agent1_cost'].sum():.4f} $") 
                 st.info(f"Total cost Agent 2: {df['agent2_cost'].sum():.4f} $")
             with cols_plots[2]:
-                st.subheader("Response Time")
+                st.write("##### Response Time (s)")
                 st.line_chart(df[["agent1_time", "agent2_time"]], color=["#12c914", "#0074ba"])
                 st.info(f"Total time Agent 1: {df['agent1_time'].sum():.3f} s")
                 st.info(f"Total time Agent 2: {df['agent2_time'].sum():.3f} s")
