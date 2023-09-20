@@ -4,3 +4,4 @@ __pycache__
 secrets*
 .idea/
 .env
+experiments/
