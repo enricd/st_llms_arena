@@ -31,6 +31,7 @@ def board_plot(board_config, board_state, is_display=False, save_dir=None):
 
     # Create a white background image
     image = np.ones((grid_thickness, grid_thickness, 3), dtype=np.uint8) * BACKGROUND_COLOR
+    image = image.astype(np.uint8)
 
     cv2.line(image, (0, 0), (0, grid_thickness), LINES_COLOR, thickness=LINE_THICKNESS)
     cv2.line(image, (0, 0), (grid_thickness, 0), LINES_COLOR, thickness=LINE_THICKNESS)
