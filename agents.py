@@ -7,16 +7,25 @@ from langchain.callbacks import get_openai_callback
 
 
 
-def board_to_emojis(board_config, board_state):
+def board_to_char(board_config, board_state, chars_type="emojis"):
 
-    CELL = "⬜"
-    SNAKE1_HEAD = "🟢"
-    SNAKE1 = "🟩"
-    SNAKE2_HEAD = "🔵"
-    SNAKE2 = "🟦"
-    FOOD = "🍎"
+    if chars_type == "emojis":
+        CELL = "⬜"
+        SNAKE1_HEAD = "🟢"
+        SNAKE1 = "🟩"
+        SNAKE2_HEAD = "🔵"
+        SNAKE2 = "🟦"
+        FOOD = "🍎"
 
-    emojis_board_list = []
+    elif chars_type == "_GBR":
+        CELL = " _"
+        SNAKE1_HEAD = " G"
+        SNAKE1 = " g"
+        SNAKE2_HEAD = " B"
+        SNAKE2 = " b"
+        FOOD = " R"
+
+    chars_board_list = []
 
     for y in range(board_config["GRID_SIZE"]):
         line = []
@@ -40,11 +49,11 @@ def board_to_emojis(board_config, board_state):
             else:
                 line.append(CELL)
 
-        emojis_board_list.append(line)
+        chars_board_list.append(line)
 
-    emojis_board = "\n".join([f"{i:02}" + "".join(line) for i, line in enumerate(emojis_board_list)])
+    chars_board = "\n".join([f"{i:02}" + "".join(line) for i, line in enumerate(chars_board_list)])
 
-    return emojis_board
+    return chars_board
 
 
 def get_agent_action(agent, llm, prompt, board_config, board_state, is_test=False):
@@ -57,10 +66,11 @@ def get_agent_action(agent, llm, prompt, board_config, board_state, is_test=Fals
             ]
         )
 
-        emojis_board = board_to_emojis(board_config, board_state)
+        emojis_board = board_to_char(board_config, board_state)
+        chars_board = board_to_char(board_config, board_state, chars_type="_GBR")
         board_state_str = str(board_state)
 
-        messages = template.format_messages(emojis_board=emojis_board, board_state_str=board_state_str)
+        messages = template.format_messages(emojis_board=emojis_board, chars_board=chars_board, board_state_str=board_state_str)
         # if agent == 1:
         #     print("messages:", messages)
 
@@ -127,4 +137,6 @@ if __name__ == "__main__":
         "food": [(7, 7), (8, 1)],
     }
 
-    print(board_to_emojis(board_config, board_state))
+    print(board_to_char(board_config, board_state))
+    print("")
+    print(board_to_char(board_config, board_state, chars_type="_GBR"))

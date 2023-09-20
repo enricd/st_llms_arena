@@ -3,7 +3,7 @@ import os
 from langchain.chat_models import ChatOpenAI
 import tiktoken
 
-from game_engine import game_engine, board_state_0
+from game_engine import game_engine
 from utils import contributor_card, enric_info
 
 
@@ -28,8 +28,11 @@ Make sure to always add a space after the emoji and only use one emoji in your r
 DEFAULT_PROMPT2 = [
     """You are an expert gamer agent playing the 1vs1 snake game in a grid board. You can move up, down, left or right. 
 You can eat food to grow. If you hit a wall or another snake, you die. The game ends when one of the snakes dies. You are compiting against another snake.""",
-"""You are the snake2 which is the color blue. Your opponent is the snake1 with color green. This is the game board in emojis where heads are rounds, bodies are squares and food is an apple: 
-{emojis_board}
+"""You are the snake2 which is the color blue. Your opponent is the snake1 with color green. This is the game board in characters where heads are G (green) and B (blue), bodies are g and b and food is R. Empty cells are marked with _. 
+Every line starts also with its number which is at the same time the y coordinate for that line: 
+Characters board:
+{chars_board}
+
 and this is the board state in JSON, positions are (x, y), the game board size is 15 by 15, x goes from 0 to 14 left to right and y goes 0 to 14 up to down: {board_state_str}
 The snake dir parameter is the first letter of the previous chosen direction of the snake, if you chose an opposite direction you will die as you will collide with your own body.
 You have to shortly reason your next move in 1-3 lines and then always add one of the follwoing emojis: ⬆️ ⬇️ ⬅️ ➡️ to chose the direction of your next move.
@@ -84,27 +87,63 @@ def main():
     # --- User inputs ---
 
     with st.expander("### Instructions:"):
-        st.write("- The following variables are available for the prompt: `{emojis_board}`, `{board_state_str}`")
-        st.write("- Example `{emojis_board}`:")
-        st.text("""
-        00⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        01⬜⬜⬜⬜⬜⬜⬜⬜🍎⬜⬜⬜⬜⬜⬜
-        02⬜⬜🟩🟩🟩🟢⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        03⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        04⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        05⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        06⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        07⬜⬜⬜⬜⬜⬜⬜🍎⬜⬜⬜⬜⬜⬜⬜
-        08⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        09⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        10⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        11⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        12⬜⬜⬜⬜⬜⬜⬜⬜⬜🔵🟦🟦🟦⬜⬜
-        13⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
-        14⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜""")
-        st.write("- Example `{board_state_str}`: ")
-        st.write(str(board_state_0))
-        st.write("- There is a couple of default prompt examples that you can modify.")
+        st.write("- This is a 1vs1 snake game where two LLM Agents are playing against each other. You can either modify the model and/or the prompt for each Agent.")
+        st.write("- The following variables are available for the prompt: `{emojis_board}`, `{chars_board}`, `{board_state_str}` (it's not necessary to use all of them, it will take longer and spend more tokens)")
+        cols_inst = st.columns(2)
+        with cols_inst[0]:
+            st.write("- Example `{emojis_board}` (690 tokens):")
+            st.text("""
+            00⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            01⬜⬜⬜⬜⬜⬜⬜⬜🍎⬜⬜⬜⬜⬜⬜
+            02⬜⬜🟩🟩🟩🟢⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            03⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            04⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            05⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            06⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            07⬜⬜⬜⬜⬜⬜⬜🍎⬜⬜⬜⬜⬜⬜⬜
+            08⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            09⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            10⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            11⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            12⬜⬜⬜⬜⬜⬜⬜⬜⬜🔵🟦🟦🟦⬜⬜
+            13⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜
+            14⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜""")
+        with cols_inst[1]:
+            st.write("- Example `{chars_board}` (240 tokens):")
+            st.text("""
+            00 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            01 _ _ _ _ _ _ _ _ R _ _ _ _ _ _
+            02 _ _ g g g G _ _ _ _ _ _ _ _ _
+            03 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            04 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            05 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            06 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            07 _ _ _ _ _ _ _ R _ _ _ _ _ _ _
+            08 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            09 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            10 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            11 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            12 _ _ _ _ _ _ _ _ _ B b b b _ _
+            13 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+            14 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _""")
+
+        st.write("- Example `{board_state_str}` (120 tokens):")
+        board_state_example = """           \"\"\"{
+            "turn": 0,
+            "snake1": {
+                "body": [(5, 2), (4, 2), (3, 2), (2, 2)],
+                "dir": "R",
+                "is_alive": True,
+            },
+            "snake2": {
+                "body": [(9, 12), (10, 12), (11, 12), (12, 12)],
+                "dir": "L",
+                "is_alive": True,
+            },
+            "food": [(7, 7), (8, 1)],
+        }\"\"\""""
+        st.text(board_state_example)
+        st.write("- You will find a couple of default prompt examples that you can modify.")
         st.write("- The agent has always to output one of the following emojis: ⬆️ ⬇️ ⬅️ ➡️ to chose the direction of the next move.")
         st.write("- The agent can make a few lines (recommended 1-3) of reasoning before deciding the next move with an arrow emoji. ")
         st.write("- The game ends when one of the snakes dies by hitting a wall or another snake or after 100 turns.")
@@ -129,7 +168,7 @@ def main():
                     "human_msg": st.text_area("Human Message", value=DEFAULT_PROMPT1[1], height=120, key="prompt1_human_msg"),
                 }
 
-                st.write(f"Input tokens: `{len(encoding1.encode(prompt1['human_msg'] + prompt1['sys_msg']))}` + variables tokens (800 aprox.)")
+                st.write(f"Input tokens: `{len(encoding1.encode(prompt1['human_msg'] + prompt1['sys_msg']))}` + variables tokens")
 
 
         with cols0[1]:
@@ -146,7 +185,7 @@ def main():
                     "human_msg": st.text_area("Human Message", value=DEFAULT_PROMPT2[1], height=120, key="prompt2_human_msg"),
                 }
 
-                st.write(f"Input tokens: `{len(encoding2.encode(prompt2['human_msg'] + prompt2['sys_msg']))}` + variables tokens (800 aprox.)")
+                st.write(f"Input tokens: `{len(encoding2.encode(prompt2['human_msg'] + prompt2['sys_msg']))}` + variables tokens")
 
 
     # --- Game display ---
