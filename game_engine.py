@@ -192,13 +192,13 @@ def game_engine(board_config=board_config,
         with container1:
             st.markdown(f"<h4 style='text-align:center; background-color:green;'> Agent 1 Score: {len(board_state['snake1']['body'])} </h4>", unsafe_allow_html=True)
             st.write("")
-            for i in range(min(3, len(game_history)-1)):
+            for i in range(min(2, len(game_history)-1)):
                 st.success(f"**Turn {turn-i}:** " + game_history[-(i+1)]["agent1_response"], icon=DIR_TO_ARROW[game_history[-(i+1)]["agent1_action"]])
 
         with container2:
             st.markdown(f"<h4 style='text-align:center; background-color:blue;'> Agent 2 Score: {len(board_state['snake2']['body'])} </h4>", unsafe_allow_html=True)
             st.write("")
-            for i in range(min(3, len(game_history)-1)):
+            for i in range(min(2, len(game_history)-1)):
                 st.info(f"**Turn {turn-i}:** " + game_history[-(i+1)]["agent2_response"], icon=DIR_TO_ARROW[game_history[-(i+1)]["agent2_action"]])
 
         # Update board
@@ -213,6 +213,7 @@ def game_engine(board_config=board_config,
         df = pd.DataFrame(game_history)
 
         with plots_container:
+            st.write("")
             cols_plots = st.columns(3)
             with cols_plots[0]:
                 st.write("##### Completion tokens")

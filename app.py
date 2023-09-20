@@ -25,7 +25,7 @@ and this is the board state in JSON, positions are in (x, y) format, the game bo
 {board_state_str}
 
 The snake dir parameter is the first letter of the previous chosen direction of the snake, if you chose an opposite direction you will die as you will collide with your own body.
-You have to shortly reason your next move in 1-3 lines and then always add one of the followoing emojis: ⬆️, ⬇️, ⬅️, ➡️ (for <up>, <down>, <left> and <right>) to chose the direction of your next move.
+You have to shortly reason your next move in 1-3 lines and then always add one of the following emojis: ⬆️, ⬇️, ⬅️, ➡️ (for <up>, <down>, <left> and <right>) to chose the direction of your next move.
 Make sure to always add a space after the emoji and only use one emoji in your response which will be your final decision for the turn.""",
 ]
 
@@ -42,7 +42,7 @@ and this is the board state in JSON, positions are in (x, y) format, the game bo
 {board_state_str}
 
 The snake dir parameter is the first letter of the previous chosen direction of the snake, if you chose an opposite direction you will die as you will collide with your own body.
-You have to shortly reason your next move in 1-3 lines and then always add one of the followoing emojis: ⬆️, ⬇️, ⬅️, ➡️ (for <up>, <down>, <left> and <right>) to chose the direction of your next move.
+You have to shortly reason your next move in 1-3 lines and then always add one of the following emojis: ⬆️, ⬇️, ⬅️, ➡️ (for <up>, <down>, <left> and <right>) to chose the direction of your next move.
 Make sure to always add a space after the emoji and only use one emoji in your response which will be your final decision for the turn.
 
 Makt the following Chain of Thought in few words:

@@ -71,8 +71,8 @@ def get_agent_action(agent, llm, prompt, board_config, board_state, is_test=Fals
         board_state_str = str(board_state)
 
         messages = template.format_messages(emojis_board=emojis_board, chars_board=chars_board, board_state_str=board_state_str)
-        # if agent == 1:
-        #     print("messages:", messages)
+        if agent == 2:
+            print("messages:", messages)
 
         # OpenAI API call
         t0 = time()
