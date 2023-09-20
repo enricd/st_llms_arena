@@ -172,6 +172,8 @@ def main():
 
         with cols0[0]:
             model1 = st.selectbox("Select the LLM-1", options=AVAILABLE_MODELS, index=0)
+            if model1 == "openai gpt-4":
+                st.warning("⚠️ GPT-4 can cost around 10-30 cents per turn per agent, which can lead to few dollars per game!")
             encoding1 = tiktoken.encoding_for_model(model1.split(" ")[1])
             llm1 = ChatOpenAI(temperature=llm1_temp, openai_api_key=openai_api_key, model_name=model1.split(" ")[1])
 
@@ -189,6 +191,8 @@ def main():
 
         with cols0[2]:
             model2 = st.selectbox("Select the LLM-2", options=AVAILABLE_MODELS, index=0)
+            if model2 == "openai gpt-4":
+                st.warning("⚠️ GPT-4 can cost around 10-30 cents per turn per agent, which can lead to few dollars per game!")
             encoding2 = tiktoken.encoding_for_model(model2.split(" ")[1])
             llm2 = ChatOpenAI(temperature=llm2_temp, openai_api_key=openai_api_key, model_name=model2.split(" ")[1])
 
