@@ -46,7 +46,7 @@ You have to shortly reason your next move in 1-3 lines and then always add one o
 Make sure to always add a space after the emoji and only use one emoji in your response which will be your final decision for the turn.
 
 Makt the following Chain of Thought in few words:
-1. Locate yourself and your head in the chars map (the capital B) and coordinates (the element 0 of the body list in snake2, the body parts are ordered from head to tail)
+1. Locate yourself and your head in the chars map (the <B> char) and the (x, y) coordinates from the board state (the element 0 of the body list in snake2, the body parts are ordered from head to tail)
 2. Locate the closest food
 3. Chose the direction to move on cell closer to the food, check if you will die/lose there and if so chose another direction
 4. Finally output the emoji for the direction you chose""",
@@ -101,7 +101,7 @@ def main():
 
     with st.expander("### Instructions:"):
         st.write("- This is a 1vs1 snake game where two LLM Agents are playing against each other. You can either modify the model and/or the prompt for each Agent.")
-        st.write("- The following variables are available for the prompt: `{emojis_board}`, `{chars_board}`, `{board_state_str}` (it's not necessary to use all of them, it will take longer and spend more tokens)")
+        st.write("- The following variables are available for the prompt, updated at each turn, in order to make the agent aware of the current situation: `{emojis_board}`, `{chars_board}`, `{board_state_str}`. It's not necessary to use all of them, it would take longer and spend more tokens")
         cols_inst = st.columns(2)
         with cols_inst[0]:
             st.write("- Example `{emojis_board}` (690 tokens):")
@@ -140,7 +140,7 @@ def main():
             13 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
             14 _ _ _ _ _ _ _ _ _ _ _ _ _ _ _""")
 
-        st.write("- Example `{board_state_str}` (120 tokens):")
+        st.write("- Example `{board_state_str}` (100-120 tokens):")
         board_state_example = """           \"\"\"{
             "turn": 0,
             "snake1": {
@@ -157,7 +157,7 @@ def main():
         }\"\"\""""
         st.text(board_state_example)
         st.write("- You will find a couple of default prompt examples that you can modify.")
-        st.write("- The agent has always to output one of the following emojis: ⬆️ ⬇️ ⬅️ ➡️ to chose the direction of the next move.")
+        st.write("- The agent has always to output one (and only one) of the following emojis: ⬆️ ⬇️ ⬅️ ➡️ to chose the direction of the next move.")
         st.write("- The agent can make a few lines (recommended 1-3) of reasoning before deciding the next move with an arrow emoji. ")
         st.write("- The game ends when one of the snakes dies by hitting a wall or another snake or after 100 turns.")
         st.write("- The game is played in a 15x15 grid board. x is the horizontal axis and goes from 0 to 14 left to right. y is the vertical axis and goes from 0 to 14 up to down.")
