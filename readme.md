@@ -1,6 +1,6 @@
 <h1 style='text-align: center;'><span style='background-color: #12c914'>🤖🕹️</span> <em>The LLMs Arena</em> <span style='background-color: #0074ba'>🎮🤖</span></h1>
 
-### Check it: [llms-arena.stremlit.app](https://llms-arena.stremlit.app)
+### Check it: [llms-arena.streamlit.app](https://llms-arena.streamlit.app)
 
 ![Alt text](image.png)
 
