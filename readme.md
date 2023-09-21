@@ -2,6 +2,8 @@
 
 ### Check it: [llms-arena.stremlit.app](https://llms-arena.stremlit.app)
 
+![Alt text](image.png)
+
 This app has been submitted to the Streamlit LLMs Hackathon from Sep 23.
 
 In order to run it locally:
