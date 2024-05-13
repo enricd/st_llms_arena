@@ -33,75 +33,84 @@ def board_plot(board_config, board_state, is_display=False, save_dir=None):
     image = np.ones((grid_thickness, grid_thickness, 3), dtype=np.uint8) * BACKGROUND_COLOR
     image = image.astype(np.uint8)
 
+    # Draw the grid lines
     cv2.line(image, (0, 0), (0, grid_thickness), LINES_COLOR, thickness=LINE_THICKNESS)
     cv2.line(image, (0, 0), (grid_thickness, 0), LINES_COLOR, thickness=LINE_THICKNESS)
 
     for i in range(1, GRID_SIZE + 1):
-        # vertical line
+        # Vertical lines
         v_start_point = (i * (SQUARE_SIZE + LINE_THICKNESS), 0)
         v_end_point = (i * (SQUARE_SIZE + LINE_THICKNESS), grid_thickness)
         cv2.line(image, v_start_point, v_end_point, LINES_COLOR, thickness=LINE_THICKNESS)
 
-        # horizontal line
+        # Horizontal lines
         h_start_point = (0, i * (SQUARE_SIZE + LINE_THICKNESS))
         h_end_point = (grid_thickness, i * (SQUARE_SIZE + LINE_THICKNESS))
         cv2.line(image, h_start_point, h_end_point, LINES_COLOR, thickness=LINE_THICKNESS)
 
+    # Function to draw every snake and food square position in the grid
     def draw_pos(target_pos, color, is_head=False, dir=None):
+
+        # Getting the square's coordinates
         square_top_left = (target_pos[0] * (SQUARE_SIZE + LINE_THICKNESS) + LINE_THICKNESS, target_pos[1] * (SQUARE_SIZE + LINE_THICKNESS) + LINE_THICKNESS)
         square_bottom_right = (square_top_left[0] + SQUARE_SIZE - LINE_THICKNESS, square_top_left[1] + SQUARE_SIZE - LINE_THICKNESS)
         cv2.rectangle(image, square_top_left, square_bottom_right, color, -1)
         
-        # Draw the eyes in the head
+        # Drawing the eyes in the head
         if is_head:
             radius = SQUARE_SIZE // 5
 
+            # Getting the eyes' coordinates
             if dir in ["U", "D"]:
                 center1 = (square_top_left[0] + SQUARE_SIZE//4 - 1, square_top_left[1] + SQUARE_SIZE//2)
                 center2 = (square_top_left[0] + 3 * SQUARE_SIZE//4, square_top_left[1] + SQUARE_SIZE//2)
-                if dir == "U":
+                if dir == "U":      # Looking up
                     center1pupil = (center1[0], center1[1] - radius//2) 
                     center2pupil = (center2[0], center2[1] - radius//2)
-                elif dir == "D": 
+                elif dir == "D":    # Looking down
                     center1pupil = (center1[0], center1[1] + radius//2) 
                     center2pupil = (center2[0], center2[1] + radius//2)
 
             elif dir in ["R", "L"]:
                 center1 = (square_top_left[0] + SQUARE_SIZE//2, square_top_left[1] + SQUARE_SIZE//4 - 1)
                 center2 = (square_top_left[0] + SQUARE_SIZE//2, square_top_left[1] + 3 * SQUARE_SIZE//4)
-                if dir == "R":
+                if dir == "R":      # Looking right
                     center1pupil = (center1[0] + radius//2, center1[1]) 
                     center2pupil = (center2[0] + radius//2, center2[1])
-                elif dir == "L":
+                elif dir == "L":    # Looking left
                     center1pupil = (center1[0] - radius//2, center1[1]) 
                     center2pupil = (center2[0] - radius//2, center2[1])
 
+            # Drawing the eyes
             cv2.circle(image, center1, radius, (200, 200, 200), -1)
             cv2.circle(image, center2, radius, (200, 200, 200), -1)
             cv2.circle(image, center1pupil, radius//2, (20, 20, 20), -1)
             cv2.circle(image, center2pupil, radius//2, (20, 20, 20), -1)
 
+    # Drawing Snake's 1 (green) parts
     for pos in snake1_body[1:]:
         draw_pos(pos, SNAKE1_COLOR, False, snake1_dir)
     draw_pos(snake1_body[0], SNAKE1_COLOR, True, snake1_dir)
 
+    # Drawing Snake's 2 (blue) parts
     for pos in snake2_body[1:]:
         draw_pos(pos, SNAKE2_COLOR, False, snake2_dir)
     draw_pos(snake2_body[0], SNAKE2_COLOR, True, snake2_dir)
 
+    # Drawing food
     for pos in food:
         draw_pos(pos, FOOD_COLOR)
 
-    
+
     image = image.astype(np.uint8)
 
-    #print("Time taken: {:.5f} seconds".format(time() - t0))
-    # Display the image on your computer screen
+    # Display the image on your computer screen (for testing)
     if is_display:
         cv2.imshow("Grid Image", image)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    # Save the image as a PNG file (not needed for the app)
     if save_dir is not None:
         # Save the image as a PNG file
         cv2.imwrite(save_dir + f"{turn:03}_turn.png", image)
@@ -125,7 +134,7 @@ if __name__ == "__main__":
         "LINES_COLOR": (75, 40, 40),
         "SNAKE1_COLOR": (20, 200, 20),
         "SNAKE2_COLOR": (190, 120, 0),
-        "FOOD_COLOR": (20, 200, 250),
+        "FOOD_COLOR": (50, 50, 250),
 
         "MAX_TURNS": 100,
     }

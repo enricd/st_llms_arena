@@ -7,9 +7,6 @@ from board_plot import board_plot
 from agents import get_agent_action
 
 
-# Look... this could be done better, using OOP and so, but I programmed this in 2-3 nights and it takes me double the
-# time to program with classes and objects unless I copy the code from somewhere else. So, I'm sorry if this bothers you :).
-
 # Configs
 board_config = {
     "GRID_SIZE": 15,
@@ -136,8 +133,6 @@ def game_engine(board_config=board_config,
             if new_food_pos is not None:
                 board_state["food"].append(new_food_pos)
 
-        #print("board_state:", board_state)
-
         # Agents turn
         agent1_action, agent1_response, llm1_time, completion_tokens1, cost1 = get_agent_action(agent=1, llm=llm1, prompt=prompt1, board_config=board_config, board_state=board_state)
         agent2_action, agent2_response, llm2_time, completion_tokens2, cost2 = get_agent_action(agent=2, llm=llm2, prompt=prompt2, board_config=board_config, board_state=board_state)
@@ -154,16 +149,16 @@ def game_engine(board_config=board_config,
 
         # Check if game is over
         if board_state["snake1"]["body"][0] in board_state["snake2"]["body"] or \
-            board_state["snake1"]["body"][0] in board_state["snake1"]["body"][1:] or\
-            board_state["snake1"]["body"][0][0] < 0 or board_state["snake1"]["body"][0][0] >= board_config["GRID_SIZE"] or\
+            board_state["snake1"]["body"][0] in board_state["snake1"]["body"][1:] or \
+            board_state["snake1"]["body"][0][0] < 0 or board_state["snake1"]["body"][0][0] >= board_config["GRID_SIZE"] or \
             board_state["snake1"]["body"][0][1] < 0 or board_state["snake1"]["body"][0][1] >= board_config["GRID_SIZE"]:
             
             board_state["snake1"]["is_alive"] = False
             game_over = True
         
         if board_state["snake2"]["body"][0] in board_state["snake1"]["body"] or \
-            board_state["snake2"]["body"][0] in board_state["snake2"]["body"][1:] or\
-            board_state["snake2"]["body"][0][0] < 0 or board_state["snake2"]["body"][0][0] >= board_config["GRID_SIZE"] or\
+            board_state["snake2"]["body"][0] in board_state["snake2"]["body"][1:] or \
+            board_state["snake2"]["body"][0][0] < 0 or board_state["snake2"]["body"][0][0] >= board_config["GRID_SIZE"] or \
             board_state["snake2"]["body"][0][1] < 0 or board_state["snake2"]["body"][0][1] >= board_config["GRID_SIZE"]:
             
             board_state["snake2"]["is_alive"] = False
@@ -218,17 +213,17 @@ def game_engine(board_config=board_config,
             with cols_plots[0]:
                 st.write("##### Completion tokens")
                 st.line_chart(df[["agent1_completion_tokens", "agent2_completion_tokens"]], color=["#12c914", "#0074ba"])
-                st.info(f"Total completion tokens Agent 1: {df['agent1_completion_tokens'].sum()}")
+                st.success(f"Total completion tokens Agent 1: {df['agent1_completion_tokens'].sum()}")
                 st.info(f"Total completion tokens Agent 2: {df['agent2_completion_tokens'].sum()}")
             with cols_plots[1]:
                 st.write("##### Cost of input + completion tokens ($)")
                 st.line_chart(df[["agent1_cost", "agent2_cost"]], color=["#12c914", "#0074ba"])
-                st.info(f"Total cost Agent 1: {df['agent1_cost'].sum():.4f} $") 
+                st.success(f"Total cost Agent 1: {df['agent1_cost'].sum():.4f} $") 
                 st.info(f"Total cost Agent 2: {df['agent2_cost'].sum():.4f} $")
             with cols_plots[2]:
                 st.write("##### Response Time (s)")
                 st.line_chart(df[["agent1_time", "agent2_time"]], color=["#12c914", "#0074ba"])
-                st.info(f"Total time Agent 1: {df['agent1_time'].sum():.3f} s")
+                st.success(f"Total time Agent 1: {df['agent1_time'].sum():.3f} s")
                 st.info(f"Total time Agent 2: {df['agent2_time'].sum():.3f} s")
 
 
@@ -253,8 +248,3 @@ def game_engine(board_config=board_config,
     st.toast(f"Game over! \nWinner: {winner}", icon="🟰" if winner=="Draw" else "🎉")
     if winner != "Draw":
         st.balloons()
-
-
-if __name__ == "__main__":
-
-    randint()
